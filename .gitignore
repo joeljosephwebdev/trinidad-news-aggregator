@@ -2,6 +2,7 @@
 article_list.json
 __pycache__
 *.log
+TODO.txt
 
 # Created by venv; see https://docs.python.org/3/library/venv.html
 bin
