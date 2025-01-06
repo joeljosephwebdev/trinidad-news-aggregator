@@ -1,4 +1,4 @@
-# Trinidad News Aggregator 🌏📰🤖
+# Trinidad News Aggregator 🇹🇹📰🤖
 
 ## Authors 🙋‍♂️
 

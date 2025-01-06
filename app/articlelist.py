@@ -2,23 +2,21 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlsplit
 import json
 
-from helpers import get_html
+from helpers import get_html, convert_unicode_to_html_entities
 from article import Article
 from logger import logging
 from constants import ARTICLE_LIST_FILE
 
 
 def extract_articles(base_url, html_content):
-    """
-    Generic article extractor that looks for common headline patterns
     
-    Args:
-        html_content: String of HTML content
-        base_url: Base URL for converting relative URLs to absolute
+    # Generic article extractor that looks for common headline patterns
+    # Args:
+    #     html_content: String of HTML content
+    #     base_url: Base URL for converting relative URLs to absolute
+    # Returns:
+    #     List of dicts containing headline and URL
     
-    Returns:
-        List of dicts containing headline and URL
-    """
     soup = BeautifulSoup(html_content, 'html.parser')
     articles = []
     
@@ -34,7 +32,7 @@ def extract_articles(base_url, html_content):
         elements = soup.select(selector)
         for element in elements:
             # Get headline text
-            headline = element.get_text().strip()
+            headline = convert_unicode_to_html_entities(element.get_text().strip())
             
             # Skip if too short or looks like navigation
             if len(headline) < 10 or any(word in headline.lower() for word in ['menu', 'navigation', 'search']):
@@ -52,7 +50,7 @@ def extract_articles(base_url, html_content):
                 continue
             
             # Skip opinion pieces and ads
-            if ('/opinion/' in url or '/features/' in url):
+            if ('/opinion/' in url or '/features/' in url or '/multimedia/' in url):
                continue
             
             # Clean and validate URL
@@ -98,6 +96,10 @@ class ArticleList():
       logging.info(f"{len(site_articles)} articles found...")
       for article in site_articles:
          self.add_article(article)
+  
+  def pull_article_details(self):
+     for article in self.__articles:
+        article.pull_details()
   
   def get_length(self):
      return self.__count
