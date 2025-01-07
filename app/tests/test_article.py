@@ -19,6 +19,13 @@ from article import Article
 class TestArticle(unittest.TestCase):
   def test_get_article_data(self):
     article = Article("https://example.com", "Something happened somewhere", "https://example.com/something")
-    result = {'base_url': 'https://example.com', 'headline': 'Something happened somewhere', 'url': 'https://example.com/something', 'img_url': None, 'article_body': None}
+    result = {
+      'base_url': 'https://example.com',
+      'headline': 'Something happened somewhere',
+      'url': 'https://example.com/something',
+      'img_url': None,
+      'article_body': None,
+      'publish_date': None
+      }
     self.assertEqual(article.get_article(), result)
     

@@ -1,5 +1,5 @@
-import requests
-from bs4 import BeautifulSoup
+import requests # type: ignore
+from bs4 import BeautifulSoup # type: ignore
 import html, unicodedata
 
 from logger import logging
@@ -57,30 +57,44 @@ def get_article_text(content, base_url : str, url : str) -> list:
               paragraphs = body.find_all('p')
             except Exception as e:
                logging.error(f"No content found for {url}")
-            return paragraphs
           case "https://www.guardian.co.tt/":
             try:
               paragraphs = content.find_all('p', class_="bodytext")
             except Exception as e:
                logging.error(f"No content found for {url}")
-            return paragraphs
           case "https://newsday.co.tt/category/news/":
             try:
               body = body = content.find('article', class_="article-content")
               paragraphs = body.find_all('p')
             except Exception as e:
                logging.error(f"No content found for {url}")
-            return paragraphs
+      
+      body_string = ''.join([f'<p>{tag.get_text()}</p>' for tag in paragraphs])
+      body_html = convert_unicode_to_html_entities(body_string)
+      return body_html
     
 
-def get_article_img(content, site : str):
-    match site:
-      case 'express':
+def get_article_img(content, base_url : str, url : str):
+    match base_url:
+      case "https://trinidadexpress.com/":
         img_url = None
         return img_url
-      case 'guardian':
+      case "https://www.guardian.co.tt/":
         img_url = None
         return img_url
-      case 'newsday':
+      case "https://newsday.co.tt/category/news/":
         img_url = None
         return img_url
+
+def get_article_date(content, base_url : str, url : str):
+    match base_url:
+      case "https://trinidadexpress.com/":
+        publish_date = content.find('time')['datetime'].split('T')[0]
+        return publish_date
+      case "https://www.guardian.co.tt/":
+        publish_date = content.find("span", class_="textelement-publishing date").get_text()
+        formatted_date = publish_date[:4] + '-' + publish_date[4:6] + '-' + publish_date[6:]
+        return formatted_date
+      case "https://newsday.co.tt/category/news/":
+        publish_date = content.find('time')['datetime']
+        return publish_date

@@ -1,8 +1,8 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup # type: ignore
 from urllib.parse import urljoin, urlsplit
 import json
 
-from helpers import get_html, convert_unicode_to_html_entities
+from helpers import get_html, get_article_text, get_article_img, get_article_date, convert_unicode_to_html_entities
 from article import Article
 from logger import logging
 from constants import ARTICLE_LIST_FILE
@@ -99,7 +99,18 @@ class ArticleList():
   
   def pull_article_details(self):
      for article in self.__articles:
-        article.pull_details()
+        article_details = article.get_article()
+        content = get_html(article_details['url'])
+
+        body = get_article_text(content, article_details['base_url'], article_details['url'])
+        article.set_text(body)
+
+        publish_date = get_article_date(content, article_details['base_url'], article_details['url'])
+        article.set_publish_date(publish_date)
+
+        img_url = get_article_img(content, article_details['base_url'], article_details['url'])
+        article.set_img_url(img_url)
+
   
   def get_length(self):
      return self.__count
