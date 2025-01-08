@@ -12,7 +12,8 @@ This is an automated aggregator for websites covering Trinidad & Tobago news.
 
 Getting started is easy. Just clone the repo, install the requirements, run the test suite to make sure everything passes, then run the main shell script.
 
-The app will crawl the homepage for each website, build of list of all current article headlines and urls, then save that list to a json file (article_list.json). 
+The app will crawl the homepage for each website, build of list of all current article headlines and urls, then save that list to a json file (article_list.json).
+There is also a simple python server setup, to serve the articles in an unstyled readable list. Once running, navigate to [localhost:8000/articles](localhost:8000/articles)
 
 * run app
    ```sh
@@ -21,6 +22,10 @@ The app will crawl the homepage for each website, build of list of all current a
 * run test suite
   ```sh
   ./test.sh
+
+* get all articles and run local server to view them 
+   ```sh
+   ./run_server.sh
 
 ### Prerequisites 🚀
 
@@ -70,3 +75,10 @@ Install project requirements:
   2025-01-05 23:14:53,115 - INFO - all articles written successfully!
   2025-01-05 23:14:53,115 - INFO - Aggregation completed in 1.93s
 ```
+```sh
+   >> ./run_server.sh
+ * Serving Flask app 'Trinidad & Tobago News'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+* Running on http://localhost:8000
+Press CTRL+C to quit
