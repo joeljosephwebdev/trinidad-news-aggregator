@@ -77,8 +77,8 @@ Install project requirements:
 ```
 ```sh
    >> ./run_server.sh
- * Serving Flask app 'Trinidad & Tobago News'
- * Debug mode: off
-WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
-* Running on http://localhost:8000
-Press CTRL+C to quit
+   * Serving Flask app 'Trinidad & Tobago News'
+   * Debug mode: off
+   WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+   * Running on http://localhost:8000
+   Press CTRL+C to quit
