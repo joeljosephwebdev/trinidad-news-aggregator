@@ -42,6 +42,14 @@ Install project requirements:
 ### Example 
 
 ```sh
+   >> ./test.sh
+   .............
+   ----------------------------------------------------------------------
+   Ran 13 tests in 0.917s
+
+   OK
+```
+```sh
   >> ./main.sh
   2025-01-05 23:14:51,189 - INFO - ------- Aggregator Initialized -------
   2025-01-05 23:14:51,190 - INFO - Searching https://trinidadexpress.com/ for articles...
@@ -61,3 +69,4 @@ Install project requirements:
   2025-01-05 23:14:53,113 - INFO - writing list of articles to article_list.json...
   2025-01-05 23:14:53,115 - INFO - all articles written successfully!
   2025-01-05 23:14:53,115 - INFO - Aggregation completed in 1.93s
+```

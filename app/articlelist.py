@@ -1,70 +1,9 @@
-from bs4 import BeautifulSoup # type: ignore
-from urllib.parse import urljoin, urlsplit
 import json
 
-from helpers import get_html, get_article_text, get_article_img, get_article_date, convert_unicode_to_html_entities
+from helpers import get_html, get_article_text, get_article_img, get_article_date, extract_articles
 from article import Article
 from logger import logging
 from constants import ARTICLE_LIST_FILE
-
-
-def extract_articles(base_url, html_content):
-    
-    # Generic article extractor that looks for common headline patterns
-    # Args:
-    #     html_content: String of HTML content
-    #     base_url: Base URL for converting relative URLs to absolute
-    # Returns:
-    #     List of dicts containing headline and URL
-    
-    soup = BeautifulSoup(html_content, 'html.parser')
-    articles = []
-    
-    # Common headline patterns
-    headline_selectors = [
-        'h1.headline', 'h2.headline', 'h3.headline', 'h4.headline',
-        '.tnt-headline a', '.card-headline a', '.article-title',
-        'a[aria-label]', 'h1', 'h2', 'h3', 'h4'
-    ]
-    
-    # Find all potential article elements
-    for selector in headline_selectors:
-        elements = soup.select(selector)
-        for element in elements:
-            # Get headline text
-            headline = convert_unicode_to_html_entities(element.get_text().strip())
-            
-            # Skip if too short or looks like navigation
-            if len(headline) < 10 or any(word in headline.lower() for word in ['menu', 'navigation', 'search']):
-                continue
-                
-            # Get URL
-            if element.name == 'a':
-                url = element.get('href', '')
-            else:
-                url_element = element.find_parent('a') or element.find('a')
-                url = url_element.get('href', '') if url_element else ''
-            
-            # Skip if too short or looks like navigation
-            if len(urlsplit(url).path) < 30:
-                continue
-            
-            # Skip opinion pieces and ads
-            if ('/opinion/' in url or '/features/' in url or '/multimedia/' in url):
-               continue
-            
-            # Clean and validate URL
-            if url:
-                url = urljoin(base_url, url)
-                articles.append(Article(
-                    base_url,
-                    headline,
-                    url
-                ))
-    
-    # Remove duplicates while preserving order
-    seen = set()
-    return [x for x in articles if x.get_article()['url'] not in seen and not seen.add(x.get_article()['url'])]
 
 class ArticleList():
   def __init__(self, articles = [], count = 0):

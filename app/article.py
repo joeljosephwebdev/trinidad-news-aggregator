@@ -1,5 +1,3 @@
-from helpers import get_html, get_article_text, get_article_img, convert_unicode_to_html_entities
-
 class Article:
   def __init__(
       self, 
