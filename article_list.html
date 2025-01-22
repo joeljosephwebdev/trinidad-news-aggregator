@@ -1,137 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Articles</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 0;  /* Remove padding */
-            background-color: #f5f5f5;
-            height: 100vh;  /* Full viewport height */
-            overflow: hidden;  /* Prevent body scrolling */
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News Articles</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            height: 100%;  /* Full height */
-            overflow-y: auto;
-            padding: 20px;
-            box-sizing: border-box;  /* Include padding in height calculation */
-        }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto 20px;
+      height: 100%;
+      overflow-y: auto;
+      padding: 0px 20px 20px;
+      box-sizing: border-box;
+    }
 
-        .card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            padding: 20px;
-            display: flex;
-            gap: 20px;
-            cursor: pointer;
-            transition: box-shadow 0.3s ease;
-        }
+    .search-container {
+      position: sticky;
+      top: 0;
+      background: #f5f5f5;
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-        .card:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
+    .search-input {
+      width: 95%;
+      padding: 12px 2%;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
 
-        .card-image {
-            width: 200px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
+    .search-input:focus {
+      border-color: #0066cc;
+    }
 
-        .card-content {
-            flex: 1;
-        }
+    .results-counter {
+      margin: 20px 0;
+      color: #666;
+      font-size: 0.95rem;
+    }
 
-        .source {
-            color: #666;
-            font-size: 0.875rem;
-            margin-bottom: 4px;
-        }
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      padding: 20px;
+      display: flex;
+      gap: 20px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      opacity: 1;
+      transform: translateY(0);
+      overflow: visible;
+    }
 
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 0 0 10px 0;
-            color: #1a1a1a;
-        }
+    .card.filtered-out {
+      opacity: 0;
+      transform: translateY(20px);
+      margin: 0;
+      padding: 0;
+      visibility: hidden;
+      position: absolute;
+      pointer-events: none;
+    }
 
-        .card-body {
-            color: #4a4a4a;
-            line-height: 1.5;
-            position: relative;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
+    .card-body {
+      color: #4a4a4a;
+      line-height: 1.5;
+      position: relative;
+      transition: all 0.3s ease-out;
+    }
 
-        .card-body.collapsed {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+    .card-body.collapsed {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      max-height: 3em;
+    }
 
-        .card-date {
-            color: #666;
-            font-size: 0.875rem;
-            margin-top: 10px;
-        }
+    .card-body:not(.collapsed) {
+      max-height: none;
+      overflow: visible;
+    }
 
-        .read-more {
-            color: #0066cc;
-            font-size: 0.875rem;
-            margin-top: 8px;
-            cursor: pointer;
-            display: inline-block;
-        }
+    .card:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
 
-        .article-link {
-            color: #0066cc;
-            text-decoration: none;
-            font-size: 0.875rem;
-            margin-top: 8px;
-            display: block;
-        }
+    .card-image {
+      width: 200px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
 
-        .article-link:hover {
-            text-decoration: underline;
-        }
-    </style>
+    .card-content {
+      flex: 1;
+    }
+
+    .source {
+      color: #666;
+      font-size: 0.875rem;
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 10px 0;
+      color: #1a1a1a;
+    }
+
+    .card-body {
+      color: #4a4a4a;
+      line-height: 1.5;
+      position: relative;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .card-body.collapsed {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-date {
+      color: #666;
+      font-size: 0.875rem;
+      margin-top: 10px;
+    }
+
+    .read-more {
+      color: #666;
+      font-size: 0.875rem;
+      margin-top: 8px;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .article-link {
+      color: #0066cc;
+      text-decoration: none;
+      font-size: 0.875rem;
+      margin-top: 8px;
+      display: block;
+    }
+
+    .article-link:hover {
+      text-decoration: underline;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-size: 1.1rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.4s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container" id="articles-container"></div>
+  <div class="container">
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Search articles..." id="searchInput">
+      <div class="results-counter"></div>
+    </div>
+    <div id="articles-container"></div>
+  </div>
 
-    <script>
-        let articlesData;
+  <script>
+    let articlesData;
 
-        function loadJSON() {
-            fetch('http://localhost:8000/article_list.json')
-                .then(response => response.json())
-                .then(data => {
-                    articlesData = data;
-                    console.log(articlesData);
-                    displayArticles(articlesData);
-                })
-                .catch(error => {
-                    console.error('Error loading JSON:', error);
-                });
-        }
+    function loadJSON() {
+      fetch('http://localhost:8000/article_list.json')
+        .then(response => response.json())
+        .then(data => {
+          articlesData = data;
+          console.log(articlesData);
+          displayArticles(articlesData);
+          setupSearch();
+          updateResultsCounter(Object.keys(data).length);
+        })
+        .catch(error => {
+          console.error('Error loading JSON:', error);
+        });
+    }
 
-        function createArticleCard(article) {
-            const source = article.base_url
-                .replace('https://www.', '')
-                .replace('https://', '')
-                .replace('.com', '')
-                .replace(/\/$/, '');
+    function createArticleCard(article) {
+      const source = article.base_url
+        .replace('https://www.', '')
+        .replace('https://', '')
+        .replace('.com', '')
+        .replace(/\/$/, '');
 
-            return `
+      return `
                 <div class="card">
                     <img src="${article.img_url}" alt="${article.headline}" class="card-image">
                     <div class="card-content">
@@ -144,50 +234,106 @@
                     </div>
                 </div>
             `;
-        }
+    }
 
-        function displayArticles(data) {
-            const container = document.getElementById('articles-container');
-            container.innerHTML = Object.values(data)
-                .map(article => createArticleCard(article))
-                .join('');
+    function updateResultsCounter(count, searchTerm = '') {
+      const counter = document.querySelector('.results-counter');
+      if (searchTerm) {
+        counter.textContent = `Found ${count} article${count !== 1 ? 's' : ''} matching "${searchTerm}"`;
+      } else {
+        counter.textContent = `${count} total article${count !== 1 ? 's' : ''}`;
+      }
+    }
 
-            // Add click handlers after rendering
-            setupCardHandlers();
-        }
+    function displayArticles(data, searchTerm = '') {
+      const container = document.getElementById('articles-container');
+      const articles = Object.values(data);
 
-        function setupCardHandlers() {
-            const cards = document.querySelectorAll('.card');
-            
-            cards.forEach(card => {
-                const body = card.querySelector('.card-body');
-                const readMore = card.querySelector('.read-more');
-                
-                readMore.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleCard(body, readMore);
-                });
-                
-                // Prevent card clicks from triggering on links
-                card.querySelector('.article-link').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
-            });
-        }
+      let filteredArticles = articles;
+      if (searchTerm) {
+        const searchLower = searchTerm.toLowerCase();
+        filteredArticles = articles.filter(article =>
+          article.headline.toLowerCase().includes(searchLower) ||
+          article.article_body.toLowerCase().includes(searchLower)
+        );
+      }
 
-        function toggleCard(body, readMore) {
-            const isCollapsed = body.classList.contains('collapsed');
-            
-            if (isCollapsed) {
-                body.classList.remove('collapsed');
-                readMore.textContent = 'Show less';
-            } else {
-                body.classList.add('collapsed');
-                readMore.textContent = 'Read more';
-            }
-        }
+      updateResultsCounter(filteredArticles.length, searchTerm);
 
-        window.onload = loadJSON;
-    </script>
+      if (filteredArticles.length === 0) {
+        container.innerHTML = `
+            <div class="no-results">
+                No articles found matching "${searchTerm}"
+            </div>
+        `;
+        return;
+      }
+
+      // Always rebuild the entire container with filtered articles
+      container.innerHTML = filteredArticles
+        .map((article, index) => {
+          const card = createArticleCard(article);
+          return card.replace('class="card"',
+            `class="card" style="animation: fadeInUp ${0.2 + index * 0.1}s ease forwards"`);
+        })
+        .join('');
+
+      // Always setup card handlers after rebuilding the container
+      setupCardHandlers();
+    }
+
+    function setupSearch() {
+      const searchInput = document.getElementById('searchInput');
+      let debounceTimeout;
+
+      searchInput.addEventListener('input', (e) => {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+          displayArticles(articlesData, e.target.value.trim());
+        }, 300);
+      });
+    }
+
+    function setupCardHandlers() {
+      const cards = document.querySelectorAll('.card');
+
+      cards.forEach(card => {
+        const body = card.querySelector('.card-body');
+        const readMore = card.querySelector('.read-more');
+
+        // Add click handler to entire card
+        card.addEventListener('click', (e) => {
+          toggleCard(body, readMore);
+        });
+
+        // Prevent card toggle when clicking the external link
+        card.querySelector('.article-link').addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+
+        // Optional: Prevent card toggle when clicking the read more button
+        // to avoid double-toggling (remove if you want both to work)
+        readMore.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleCard(body, readMore);
+        });
+      });
+    }
+
+    function toggleCard(body, readMore) {
+      const isCollapsed = body.classList.contains('collapsed');
+
+      if (isCollapsed) {
+        body.classList.remove('collapsed');
+        readMore.textContent = 'Show less';
+      } else {
+        body.classList.add('collapsed');
+        readMore.textContent = 'Read more';
+      }
+    }
+
+    window.onload = loadJSON;
+  </script>
 </body>
+
 </html>
