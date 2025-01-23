@@ -1,4 +1,5 @@
 let articlesData;
+let lastFetchTime = 0;
 
 function loadJSON() {
   fetch('http://localhost:8000/article_list.json')
@@ -9,9 +10,26 @@ function loadJSON() {
       displayArticles(articlesData);
       setupSearch();
       updateResultsCounter(Object.keys(data).length);
+      lastFetchTime = Date.now();
     })
     .catch(error => {
       console.error('Error loading JSON:', error);
+    });
+}
+
+function checkForUpdates() {
+  fetch('http://localhost:8000/article_list.json')
+    .then(response => response.json())
+    .then(newData => {
+      // Compare with current data
+      if (JSON.stringify(newData) !== JSON.stringify(articlesData)) {
+        articlesData = newData;
+        displayArticles(articlesData);
+        updateResultsCounter(Object.keys(newData).length);
+      }
+    })
+    .catch(error => {
+      console.error('Error checking for updates:', error);
     });
 }
 
@@ -133,4 +151,9 @@ function toggleCard(body, readMore) {
   }
 }
 
-window.onload = loadJSON;
+// Start periodic updates when the page loads
+window.onload = () => {
+  loadJSON();
+  // Check for updates every 30 seconds
+  setInterval(checkForUpdates, 30000);
+};

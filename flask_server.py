@@ -27,4 +27,5 @@ def serve_html():
         return "File not found", 404  # Return 404 if the file doesn't exist
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=8000)
+        port = int(os.environ.get('PORT', 8000))
+        app.run(host='0.0.0.0', port=port)
