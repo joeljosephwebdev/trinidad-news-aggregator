@@ -1,8 +1,9 @@
 let articlesData;
 let lastFetchTime = 0;
+const BASE_URL = window.location.origin;
 
 function loadJSON() {
-  fetch('http://localhost:8000/article_list.json')
+  fetch(`${BASE_URL}/article_list.json`)
     .then(response => response.json())
     .then(data => {
       articlesData = data;
@@ -18,7 +19,7 @@ function loadJSON() {
 }
 
 function checkForUpdates() {
-  fetch('http://localhost:8000/article_list.json')
+  fetch(`${BASE_URL}/article_list.json`)
     .then(response => response.json())
     .then(newData => {
       // Compare with current data
