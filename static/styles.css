@@ -82,6 +82,7 @@ body {
 .card-body.collapsed {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   max-height: 3em;
@@ -131,6 +132,7 @@ body {
 .card-body.collapsed {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

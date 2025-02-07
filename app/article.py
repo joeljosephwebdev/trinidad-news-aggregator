@@ -4,7 +4,7 @@ class Article:
       base_url: str, 
       headline: str, 
       url: str, 
-      img_url: str = None, 
+      img_url: str = "./static/images/image_not_found.png", 
       body : str = None,
       publish_date : str = None
       ):
@@ -34,7 +34,8 @@ Image Link = {self.__img_url}
     }
   
   def set_img_url(self, img_url : str):
-    self.__img_url = img_url
+    if img_url != "image not found":
+      self.__img_url = img_url
 
   def set_text(self, body : str):
     self.__body = body
