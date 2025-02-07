@@ -160,6 +160,6 @@ function toggleCard(body, readMore) {
 // Start periodic updates when the page loads
 window.onload = () => {
   loadJSON();
-  // Check for updates every 30 seconds
-  setInterval(checkForUpdates, 30000);
+  // Check for updates every 6 hours
+  setInterval(checkForUpdates, 60000 * 60 * 6);
 };
