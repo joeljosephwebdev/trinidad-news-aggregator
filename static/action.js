@@ -50,7 +50,7 @@ function createArticleCard(article) {
                         <div class="card-body collapsed">${article.article_body}</div>
                         <div class="card-date">${article.publish_date}</div>
                         <span class="read-more">Read more</span>
-                        <a href="${article.url}" class="article-link" target="_blank">View full article ↗</a>
+                        <a href="${article.url}" class="article-link" target="_blank">View original article ↗</a>
                     </div>
                 </div>
             `;
@@ -141,14 +141,19 @@ function setupCardHandlers() {
 }
 
 function toggleCard(body, readMore) {
+  const card = body.closest('.card');
   const isCollapsed = body.classList.contains('collapsed');
 
   if (isCollapsed) {
     body.classList.remove('collapsed');
     readMore.textContent = 'Show less';
+    card.classList.add('expanding');
+    card.classList.remove('collapsing');
   } else {
     body.classList.add('collapsed');
     readMore.textContent = 'Read more';
+    card.classList.add('collapsing');
+    card.classList.remove('expanding');
   }
 }
 
