@@ -8,7 +8,7 @@
 
 This is an automated aggregator for websites covering Trinidad & Tobago news.
 
-## Getting Started 💫
+## Getting Started / Contributing 💫
 
 Getting started is easy. Just clone the repo, install the requirements, run the test suite to make sure everything passes, then run the main shell script.
 

@@ -1,5 +1,5 @@
-from flask import Flask, send_from_directory, redirect, url_for
-from flask_cors import CORS
+from flask import Flask, send_from_directory, redirect, url_for # type: ignore
+from flask_cors import CORS # type: ignore
 import os
 
 app = Flask('Trinidad & Tobago News')
